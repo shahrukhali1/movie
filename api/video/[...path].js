@@ -9,35 +9,53 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Extract path from query parameters (Vercel dynamic route format)
-    // For catch-all routes [...path], the path comes as an array in req.query.path
+    // Extract path from query parameters (Vercel catch-all route format)
+    // For [...path], Vercel passes segments as array in req.query.path
     const pathParam = req.query.path;
 
     // Reconstruct the video path
     let videoPath = "";
-    if (Array.isArray(pathParam)) {
+
+    if (Array.isArray(pathParam) && pathParam.length > 0) {
       // Multiple path segments: ['movies-xxx', 'jun-24', 'Troll-2-2025.mp4']
       videoPath = "/" + pathParam.join("/");
     } else if (typeof pathParam === "string" && pathParam) {
       // Single path segment
       videoPath = "/" + pathParam;
     } else {
-      // Fallback: try to extract from URL pathname
-      // This handles cases where query params might not be populated correctly
-      const urlPath = req.url || "";
-      // Match /api/video/... or /video/... patterns
-      const match = urlPath.match(/\/(?:api\/)?video(\/.+)/);
+      // Fallback: extract from URL
+      // This handles cases where query params might not be populated
+      const url = req.url || "";
+      // Try to match /api/video/... pattern first
+      let match = url.match(/\/api\/video(\/.+)/);
+      if (!match) {
+        // Try /video/... pattern
+        match = url.match(/\/video(\/.+)/);
+      }
       if (match && match[1]) {
         videoPath = match[1];
       } else {
-        // Return error with debug info
-        return res.status(400).json({
-          error: "Video path not found",
-          query: req.query,
-          url: req.url,
-          pathParam: pathParam,
-          pathParamType: typeof pathParam,
-        });
+        // Last resort: check if path is in query as string
+        const queryKeys = Object.keys(req.query);
+        if (queryKeys.length > 0 && queryKeys[0] !== "path") {
+          // Path might be in a different query param
+          const firstKey = queryKeys[0];
+          const firstValue = req.query[firstKey];
+          if (typeof firstValue === "string") {
+            videoPath = "/" + firstValue;
+          }
+        }
+
+        if (!videoPath) {
+          return res.status(400).json({
+            error: "Video path not found",
+            query: req.query,
+            url: req.url,
+            pathParam: pathParam,
+            pathParamType: typeof pathParam,
+            method: req.method,
+          });
+        }
       }
     }
 
