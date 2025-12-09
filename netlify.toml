@@ -2,11 +2,11 @@
   command = "npm run build"
   publish = "dist"
 
-# Proxy video requests to Netlify Edge Function (supports streaming)
+# Proxy video requests to Netlify Function
 # The :splat captures everything after /video/
 [[redirects]]
   from = "/video/*"
-  to = "/.netlify/edge-functions/video-proxy?path=:splat"
+  to = "/.netlify/functions/video-proxy?path=:splat"
   status = 200
   force = true
 
