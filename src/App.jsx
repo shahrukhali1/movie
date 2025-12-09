@@ -162,7 +162,11 @@ function App() {
     }
 
     // If URL contains movies-xxx path but no domain, assume it needs /video prefix
-    if (url.includes("movies-xxx") && !url.startsWith("/video") && !url.startsWith("http")) {
+    if (
+      url.includes("movies-xxx") &&
+      !url.startsWith("/video") &&
+      !url.startsWith("http")
+    ) {
       return `/video${url.startsWith("/") ? url : `/${url}`}`;
     }
 
@@ -1675,40 +1679,100 @@ function App() {
     let rawVideoUrl = selectedAudioTrack?.videoUrl || selectedMovie.videoUrl;
     let currentVideoUrl = rawVideoUrl;
 
-    // Convert to proxy URL if needed - always use /video proxy for localhost/ngrok
+    // Check if we're in development (localhost/ngrok) or production (Vercel)
+    const isDevelopment =
+      import.meta.env.DEV ||
+      window.location.hostname === "localhost" ||
+      window.location.hostname.includes("ngrok") ||
+      window.location.hostname === "127.0.0.1";
+
+    // Check if we're on Vercel
+    const isVercel = window.location.hostname.includes("vercel.app");
+
+    // Convert to proxy URL if needed
     if (rawVideoUrl) {
-      // If URL contains video-proxy or vercel, convert to /video proxy
-      if (rawVideoUrl.includes("/api/video-proxy") || rawVideoUrl.includes("vercel.app")) {
+      // If URL contains video-proxy, extract the actual path
+      if (rawVideoUrl.includes("/api/video-proxy")) {
         // Extract the actual video path from video-proxy URL
-        const videoPathMatch = rawVideoUrl.match(/\/api\/video-proxy(\/.+?)(?:\?|$)/);
+        const videoPathMatch = rawVideoUrl.match(
+          /\/api\/video-proxy(\/.+?)(?:\?|$)/
+        );
         if (videoPathMatch) {
-          currentVideoUrl = `/video${videoPathMatch[1]}`;
-        } else {
-          // Fallback: try to extract from vercel URL
-          const vercelMatch = rawVideoUrl.match(/\/movies-xxx\/.+\.mp4/);
-          if (vercelMatch) {
-            currentVideoUrl = `/video${vercelMatch[0]}`;
+          const videoPath = videoPathMatch[1];
+          // In development (not Vercel), use /video proxy; otherwise use direct cmlhz.com URL
+          if (isDevelopment && !isVercel) {
+            currentVideoUrl = `/video${videoPath}`;
+          } else {
+            // Production/Vercel: use direct cmlhz.com URL
+            currentVideoUrl = `https://cmlhz.com${videoPath}`;
           }
         }
-      } else if (rawVideoUrl.includes("cmlhz.com")) {
-        currentVideoUrl = rawVideoUrl.replace("https://cmlhz.com", "/video");
-      } else if (rawVideoUrl.startsWith("/video")) {
-        // Already proxied correctly
-        currentVideoUrl = rawVideoUrl;
-      } else if (
+      }
+      // If URL contains vercel.app, extract path and use cmlhz.com
+      else if (rawVideoUrl.includes("vercel.app")) {
+        const vercelMatch = rawVideoUrl.match(/\/movies-xxx\/.+\.mp4/);
+        if (vercelMatch) {
+          // Always use absolute cmlhz.com URL for vercel URLs
+          currentVideoUrl = `https://cmlhz.com${vercelMatch[0]}`;
+        }
+      }
+      // If URL starts with /video, convert based on environment
+      else if (rawVideoUrl.startsWith("/video")) {
+        if (!isDevelopment || isVercel) {
+          // In production/Vercel, convert /video to absolute cmlhz.com URL
+          const videoPath = rawVideoUrl.replace("/video", "");
+          currentVideoUrl = `https://cmlhz.com${videoPath}`;
+        } else {
+          currentVideoUrl = rawVideoUrl; // Keep as is in development (not Vercel)
+        }
+      }
+      // If URL contains cmlhz.com
+      else if (rawVideoUrl.includes("cmlhz.com")) {
+        // Already has cmlhz.com - use proxy in dev (not Vercel), direct in prod/Vercel
+        if (isDevelopment && !isVercel) {
+          currentVideoUrl = rawVideoUrl.replace("https://cmlhz.com", "/video");
+        } else {
+          currentVideoUrl = rawVideoUrl; // Use direct URL in production/Vercel
+        }
+      }
+      // If URL contains movies-xxx path
+      else if (rawVideoUrl.includes("movies-xxx")) {
+        const pathMatch = rawVideoUrl.match(/\/movies-xxx\/.+\.mp4/);
+        if (pathMatch) {
+          if (isDevelopment && !isVercel) {
+            currentVideoUrl = `/video${pathMatch[0]}`;
+          } else {
+            // Production/Vercel: use absolute cmlhz.com URL
+            currentVideoUrl = `https://cmlhz.com${pathMatch[0]}`;
+          }
+        } else {
+          // Full path extraction
+          const fullPath = rawVideoUrl.startsWith("/")
+            ? rawVideoUrl
+            : `/${rawVideoUrl}`;
+          if (isDevelopment && !isVercel) {
+            currentVideoUrl = `/video${fullPath}`;
+          } else {
+            // Production/Vercel: use absolute cmlhz.com URL
+            currentVideoUrl = `https://cmlhz.com${fullPath}`;
+          }
+        }
+      }
+      // Relative URL without http or /
+      else if (
         !rawVideoUrl.startsWith("http") &&
         !rawVideoUrl.startsWith("/")
       ) {
-        // Relative URL, try to construct proxy path
-        currentVideoUrl = `/video${
-          rawVideoUrl.startsWith("/") ? rawVideoUrl : `/${rawVideoUrl}`
-        }`;
-      } else if (rawVideoUrl.includes("movies-xxx")) {
-        // If URL contains movies-xxx path, convert to /video proxy
-        const pathMatch = rawVideoUrl.match(/\/movies-xxx\/.+\.mp4/);
-        if (pathMatch) {
-          currentVideoUrl = `/video${pathMatch[0]}`;
+        if (isDevelopment && !isVercel) {
+          currentVideoUrl = `/video/${rawVideoUrl}`;
+        } else {
+          // Production/Vercel: use absolute cmlhz.com URL
+          currentVideoUrl = `https://cmlhz.com/${rawVideoUrl}`;
         }
+      }
+      // If it's already a full http URL and not cmlhz.com, keep it
+      else if (rawVideoUrl.startsWith("http")) {
+        currentVideoUrl = rawVideoUrl;
       }
     }
 
