@@ -10,6 +10,8 @@ const ALLOWED_DOMAINS = [
   "127.0.0.1",
   "09caacc2e455.ngrok-free.app",
   ".ngrok-free.app", // Allow all ngrok subdomains
+  ".vercel.app", // Allow all Vercel subdomains
+  "movie-desxyuglr-shahrukhali1s-projects.vercel.app",
 ];
 
 // Generate JWT token
@@ -85,9 +87,10 @@ export const isDomainAllowed = (origin) => {
 
     return ALLOWED_DOMAINS.some((domain) => {
       if (domain.startsWith(".")) {
-        // Wildcard domain
+        // Wildcard domain (e.g., .vercel.app, .ngrok-free.app)
         return hostname.endsWith(domain) || hostname === domain.slice(1);
       }
+      // Exact match or contains
       return hostname === domain || hostname.includes(domain);
     });
   } catch (e) {

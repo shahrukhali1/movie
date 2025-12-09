@@ -9,6 +9,8 @@ export default defineConfig({
     allowedHosts: [
       "09caacc2e455.ngrok-free.app",
       ".ngrok-free.app", // Allow all ngrok subdomains
+      ".vercel.app", // Allow all Vercel subdomains
+      "movie-desxyuglr-shahrukhali1s-projects.vercel.app",
       "localhost",
       "127.0.0.1",
     ],
@@ -92,7 +94,8 @@ export default defineConfig({
             if (
               origin &&
               (origin.includes("localhost") ||
-                origin.includes("ngrok-free.app"))
+                origin.includes("ngrok-free.app") ||
+                origin.includes("vercel.app"))
             ) {
               proxyRes.headers["Access-Control-Allow-Origin"] = origin;
             }
