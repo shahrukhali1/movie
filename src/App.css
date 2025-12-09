@@ -1,0 +1,1612 @@
+/* Netflix Clone Styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #141414;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+.netflix-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #141414;
+}
+
+/* Loading Screen */
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #141414;
+}
+
+.netflix-logo {
+  font-size: 4rem;
+  font-weight: 900;
+  color: #e50914;
+  letter-spacing: 2px;
+  margin-bottom: 2rem;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #333;
+  border-top-color: #e50914;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error Screen */
+.error-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  text-align: center;
+}
+
+.error-screen h1 {
+  color: #e50914;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.error-screen p {
+  color: #999;
+  margin-bottom: 2rem;
+}
+
+.error-screen button {
+  padding: 0.75rem 2rem;
+  background-color: #e50914;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.error-screen button:hover {
+  background-color: #f40612;
+}
+
+/* Header */
+.netflix-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 10%, transparent);
+  padding: 1rem 4%;
+  transition: background-color 0.3s;
+}
+
+.netflix-header.scrolled {
+  background-color: #141414;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1920px;
+  margin: 0 auto;
+}
+
+.netflix-logo-header {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #e50914;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.header-nav {
+  display: flex;
+  gap: 1.5rem;
+  margin-left: 2rem;
+}
+
+.nav-link {
+  color: #e5e5e5;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-input {
+  padding: 0.5rem 1rem;
+  background-color: rgba(0, 0, 0, 0.75);
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.9rem;
+  width: 300px;
+  transition: border-color 0.3s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #e50914;
+}
+
+.search-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: transform 0.3s;
+}
+
+.search-button:hover {
+  transform: scale(1.1);
+}
+
+/* Category Selector */
+.category-selector-container {
+  margin-right: 1rem;
+}
+
+.category-select-dropdown {
+  padding: 0.5rem 1rem;
+  background-color: rgba(0, 0, 0, 0.75);
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.3s;
+  min-width: 150px;
+}
+
+.category-select-dropdown:hover {
+  border-color: #e50914;
+}
+
+.category-select-dropdown:focus {
+  outline: none;
+  border-color: #e50914;
+}
+
+.category-select-dropdown option {
+  background-color: #141414;
+  color: white;
+  padding: 0.5rem;
+}
+
+/* Category Header */
+.category-header {
+  padding: 2rem 4% 1rem;
+  margin-top: -100px;
+  position: relative;
+  z-index: 1;
+}
+
+.category-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.category-description {
+  font-size: 1.1rem;
+  color: #e5e5e5;
+  margin-bottom: 1rem;
+}
+
+/* Hero Banner */
+.hero-banner {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  min-height: 500px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: flex-end;
+  padding: 4rem;
+  margin-top: 70px;
+}
+
+.hero-content {
+  max-width: 600px;
+  z-index: 1;
+}
+
+.hero-title {
+  font-size: 4rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.hero-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #e5e5e5;
+}
+
+.hero-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  color: #e5e5e5;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.play-button,
+.info-button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.play-button {
+  background-color: white;
+  color: #141414;
+}
+
+.play-button:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.info-button {
+  background-color: rgba(109, 109, 110, 0.7);
+  color: white;
+}
+
+.info-button:hover {
+  background-color: rgba(109, 109, 110, 0.9);
+}
+
+/* Main Content */
+.netflix-main {
+  padding: 2rem 4%;
+  margin-top: -100px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Movie Sections */
+.movie-section {
+  margin-bottom: 3rem;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #e5e5e5;
+}
+
+/* Row Container with Scroll */
+.row-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.scroll-button {
+  position: absolute;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  width: 50px;
+  height: 100%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scroll-button.left {
+  left: 0;
+}
+
+.scroll-button.right {
+  right: 0;
+}
+
+.scroll-button:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.movies-row {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  padding: 1rem 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.movies-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* Movie Grid */
+.movies-grid-netflix {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+/* Movie Card */
+.movie-card-netflix {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+  width: 200px;
+}
+
+.movie-card-netflix:hover {
+  transform: scale(1.1);
+  z-index: 10;
+  box-shadow: 0 8px 24px rgba(229, 9, 20, 0.4);
+}
+
+.movie-card-netflix:active {
+  transform: scale(1.05);
+}
+
+.movie-poster-netflix {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+  background-color: #333;
+}
+
+/* Continue Watching Styles */
+.continue-watching-card {
+  position: relative;
+}
+
+.continue-watching-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.2);
+  z-index: 5;
+}
+
+.continue-watching-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #e50914 0%, #f40612 100%);
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px rgba(229, 9, 20, 0.6);
+}
+
+.resume-hint {
+  color: #e50914;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Category and Genre Badges */
+.movie-category-badge {
+  display: inline-block;
+  background: rgba(229, 9, 20, 0.9);
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(229, 9, 20, 0.4);
+}
+
+.movie-genres-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.65rem;
+  margin-top: 0.3rem;
+  margin-left: 0.3rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.movie-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent);
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.movie-card-netflix:hover .movie-overlay {
+  opacity: 1;
+}
+
+.movie-title-overlay {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.movie-rating-overlay {
+  font-size: 0.8rem;
+  color: #e5e5e5;
+  margin-bottom: 0.3rem;
+}
+
+.movie-year-overlay {
+  font-size: 0.75rem;
+  color: #999;
+  margin-bottom: 0.5rem;
+}
+
+.play-hint {
+  font-size: 0.85rem;
+  color: #e50914;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  text-align: center;
+  background-color: rgba(229, 9, 20, 0.2);
+  padding: 0.3rem;
+  border-radius: 4px;
+}
+
+/* Search Results */
+.search-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 2rem 0 1rem;
+  padding: 0 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.search-results-header .section-title {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.search-query {
+  color: #e50914;
+  font-weight: 900;
+}
+
+.clear-search-btn {
+  background: rgba(229, 9, 20, 0.2);
+  border: 1px solid #e50914;
+  color: #e50914;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.clear-search-btn:hover {
+  background: rgba(229, 9, 20, 0.4);
+  border-color: #e50914;
+  box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+  transform: translateY(-2px);
+}
+
+.search-results {
+  margin-top: 2rem;
+  padding: 0 2rem;
+}
+
+.no-search-results {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: white;
+}
+
+.no-search-results p {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+}
+
+.search-hint {
+  color: #999;
+  font-size: 1rem;
+}
+
+/* Video Modal */
+.video-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.95);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.video-modal {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  background-color: #141414;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 20;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1.5rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+  line-height: 1;
+}
+
+.close-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  background-color: #000;
+  overflow: hidden;
+}
+
+/* Netflix Video Container */
+.netflix-video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  cursor: pointer;
+}
+
+.netflix-video-player {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  outline: none;
+}
+
+/* Netflix Opening Intro Animation */
+.netflix-intro-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #000 0%, #1a1a1a 50%, #000 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: netflixIntroFade 10s ease-in-out;
+}
+
+@keyframes netflixIntroFade {
+  0% {
+    opacity: 1;
+    background: linear-gradient(135deg, #000 0%, #1a1a1a 50%, #000 100%);
+  }
+  80% {
+    opacity: 1;
+    background: linear-gradient(135deg, #000 0%, #1a1a1a 50%, #000 100%);
+  }
+  100% {
+    opacity: 0;
+    pointer-events: none;
+    background: transparent;
+  }
+}
+
+.netflix-intro-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: netflixLogoScale 2s ease-out,
+    netflixLogoGlow 2s ease-in-out infinite;
+  margin-bottom: 2rem;
+}
+
+@keyframes netflixLogoScale {
+  0% {
+    transform: scale(0.5) rotate(-5deg);
+    opacity: 0;
+  }
+  30% {
+    transform: scale(1.2) rotate(2deg);
+  }
+  60% {
+    transform: scale(0.95) rotate(-1deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes netflixLogoGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 10px rgba(229, 9, 20, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 30px rgba(229, 9, 20, 0.9));
+  }
+}
+
+.netflix-logo-svg {
+  width: 200px;
+  height: auto;
+  animation: netflixLogoGlow 2s ease-in-out infinite;
+}
+
+@keyframes netflixLogoGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 10px rgba(229, 9, 20, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(229, 9, 20, 0.8));
+  }
+}
+
+/* Custom Netflix Controls */
+.netflix-video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.7) 50%,
+    transparent 100%
+  );
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.netflix-video-controls.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Progress Bar */
+.netflix-progress-container {
+  width: 100%;
+  height: 4px;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.netflix-progress-bar {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  position: relative;
+  transition: height 0.2s;
+}
+
+.netflix-progress-container:hover .netflix-progress-bar {
+  height: 6px;
+}
+
+.netflix-progress-filled {
+  height: 100%;
+  background-color: #e50914;
+  border-radius: 2px;
+  transition: width 0.1s;
+}
+
+.netflix-progress-handle {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background-color: #e50914;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+.netflix-progress-container:hover .netflix-progress-handle {
+  opacity: 1;
+}
+
+/* Controls Bar */
+.netflix-controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.netflix-controls-left,
+.netflix-controls-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Play/Pause Button */
+.netflix-play-pause-btn {
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #e50914;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+}
+
+.netflix-play-pause-btn:hover {
+  background: rgba(229, 9, 20, 0.3);
+  transform: scale(1.1);
+  border-color: #e50914;
+  box-shadow: 0 0 15px rgba(229, 9, 20, 0.5);
+}
+
+/* Skip Buttons (10 sec back, 15 min forward) */
+.netflix-skip-btn {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid #e50914;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+  position: relative;
+  padding: 0;
+}
+
+.netflix-skip-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.netflix-skip-btn span {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #e50914;
+  line-height: 1;
+  margin-top: -2px;
+}
+
+.netflix-skip-btn:hover {
+  background: rgba(229, 9, 20, 0.3);
+  transform: scale(1.1);
+  border-color: #e50914;
+  box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+}
+
+/* Volume Control */
+.netflix-volume-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.netflix-volume-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.netflix-volume-btn:hover {
+  transform: scale(1.1);
+}
+
+.netflix-volume-slider {
+  width: 100px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.netflix-volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #e50914;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s;
+  box-shadow: 0 0 5px rgba(229, 9, 20, 0.5);
+}
+
+.netflix-volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 10px rgba(229, 9, 20, 0.8);
+}
+
+.netflix-volume-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #e50914;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s;
+  box-shadow: 0 0 5px rgba(229, 9, 20, 0.5);
+}
+
+.netflix-volume-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 10px rgba(229, 9, 20, 0.8);
+}
+
+/* Time Display */
+.netflix-time-display {
+  color: #e50914;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-shadow: 0 0 5px rgba(229, 9, 20, 0.5);
+}
+
+/* Audio Selector */
+.netflix-audio-selector {
+  position: relative;
+}
+
+.netflix-audio-btn {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid #e50914;
+  border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.netflix-audio-btn:hover {
+  background: rgba(229, 9, 20, 0.3);
+  border-color: #e50914;
+  box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+  transform: scale(1.05);
+}
+
+.netflix-audio-menu {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  right: 0;
+  background: rgba(0, 0, 0, 0.95);
+  border: 1px solid #e50914;
+  border-radius: 4px;
+  padding: 0.5rem 0;
+  min-width: 150px;
+  box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+  display: none;
+  z-index: 100;
+}
+
+.netflix-audio-menu.show {
+  display: block;
+  animation: fadeIn 0.2s ease-in;
+}
+
+.netflix-audio-menu-title {
+  padding: 0.5rem 1rem;
+  color: #e50914;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(229, 9, 20, 0.3);
+  margin-bottom: 0.25rem;
+}
+
+.netflix-audio-option {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.netflix-audio-option:hover {
+  background-color: rgba(229, 9, 20, 0.2);
+}
+
+.netflix-audio-option.active {
+  background-color: rgba(229, 9, 20, 0.4);
+  color: #e50914;
+  font-weight: 600;
+}
+
+/* Fullscreen Button */
+.netflix-fullscreen-btn {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid #e50914;
+  border-radius: 4px;
+  color: white;
+  padding: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+}
+
+.netflix-fullscreen-btn:hover {
+  background: rgba(229, 9, 20, 0.3);
+  border-color: #e50914;
+  box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+  transform: scale(1.05);
+}
+
+/* Movie Info Overlay */
+.netflix-movie-info-overlay {
+  position: absolute;
+  bottom: 80px;
+  left: 1rem;
+  max-width: 50%;
+  z-index: 5;
+}
+
+.netflix-movie-title-overlay {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #e50914;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 8px rgba(229, 9, 20, 0.8);
+}
+
+.netflix-movie-meta-overlay {
+  display: flex;
+  gap: 1rem;
+  color: #e50914;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 4px rgba(229, 9, 20, 0.6);
+}
+
+/* Fullscreen Styles */
+.netflix-video-container:fullscreen {
+  background-color: #000;
+}
+
+.netflix-video-container:fullscreen .netflix-video-player {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+}
+
+/* Custom Netflix-style video controls */
+.netflix-video-player::-webkit-media-controls-panel {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.netflix-video-player::-webkit-media-controls-play-button {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+}
+
+.netflix-video-player::-webkit-media-controls-current-time-display,
+.netflix-video-player::-webkit-media-controls-time-remaining-display {
+  color: #fff;
+  font-size: 14px;
+}
+
+.netflix-video-player::-webkit-media-controls-volume-slider {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.netflix-video-player::-webkit-media-controls-timeline {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.netflix-video-player::-webkit-media-controls-timeline::-webkit-slider-thumb {
+  background-color: #e50914;
+}
+
+/* Speed Control */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.video-info-modal {
+  padding: 2rem;
+}
+
+.video-info-modal h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.movie-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  color: #e5e5e5;
+  font-size: 0.9rem;
+}
+
+.movie-genres-modal {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.video-placeholder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+}
+
+.watch-link {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #e50914;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.watch-link:hover {
+  background-color: #f40612;
+}
+
+/* Netflix Pagination */
+.netflix-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 3rem 0;
+  padding: 0 2rem;
+  flex-wrap: wrap;
+}
+
+.netflix-pagination-btn {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid #e50914;
+  color: #e50914;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.netflix-pagination-btn:hover:not(:disabled) {
+  background: rgba(229, 9, 20, 0.2);
+  border-color: #e50914;
+  box-shadow: 0 0 15px rgba(229, 9, 20, 0.5);
+  transform: translateY(-2px);
+}
+
+.netflix-pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: rgba(229, 9, 20, 0.4);
+  color: rgba(229, 9, 20, 0.4);
+}
+
+.netflix-pagination-numbers {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.netflix-pagination-number {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(229, 9, 20, 0.5);
+  color: white;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.netflix-pagination-number:hover {
+  background: rgba(229, 9, 20, 0.3);
+  border-color: #e50914;
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+}
+
+.netflix-pagination-number.active {
+  background: linear-gradient(135deg, #e50914 0%, #b20710 100%);
+  border-color: #e50914;
+  color: white;
+  box-shadow: 0 0 15px rgba(229, 9, 20, 0.7);
+  transform: scale(1.1);
+}
+
+.netflix-pagination-ellipsis {
+  color: #e50914;
+  font-weight: 700;
+  padding: 0 0.5rem;
+  user-select: none;
+}
+
+/* Loading More Indicator */
+.loading-more-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  color: white;
+}
+
+.loading-more-container .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(229, 9, 20, 0.3);
+  border-top-color: #e50914;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.loading-more-container p {
+  color: #e50914;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Pagination Info */
+.pagination-info {
+  text-align: center;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.pagination-info p {
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .netflix-logo-header {
+    font-size: 1.4rem;
+  }
+
+  .header-nav {
+    display: none;
+  }
+
+  .search-input {
+    width: 200px;
+  }
+
+  .category-select-dropdown {
+    min-width: 120px;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  /* Pagination Responsive */
+  .netflix-pagination {
+    gap: 0.25rem;
+    padding: 0 1rem;
+  }
+
+  .netflix-pagination-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .netflix-pagination-number {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+  }
+
+  .category-title {
+    font-size: 2rem;
+  }
+
+  .category-description {
+    font-size: 1rem;
+  }
+
+  .hero-banner {
+    height: 60vh;
+    min-height: 400px;
+    padding: 2rem;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-meta {
+    font-size: 0.9rem;
+    gap: 1rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  .movie-card-netflix {
+    width: 150px;
+  }
+
+  .movie-poster-netflix {
+    height: 225px;
+  }
+
+  .movies-grid-netflix {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
+  .netflix-main {
+    padding: 1rem 2%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .movie-card-netflix {
+    width: 120px;
+  }
+
+  .movie-poster-netflix {
+    height: 180px;
+  }
+
+  .movies-grid-netflix {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  .search-input {
+    width: 150px;
+  }
+
+  .category-select-dropdown {
+    min-width: 100px;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .category-selector-container {
+    margin-right: 0.5rem;
+  }
+
+  .category-title {
+    font-size: 1.5rem;
+  }
+
+  .category-description {
+    font-size: 0.9rem;
+  }
+
+  .speed-control-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    min-width: 45px;
+  }
+
+  .audio-track-selector {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .close-button {
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
+  }
+
+  .video-modal {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0;
+    padding: 0.5rem;
+  }
+
+  .netflix-video-player {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+  }
+
+  .netflix-video-controls {
+    padding: 0.5rem;
+  }
+
+  .netflix-controls-bar {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .netflix-play-pause-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .netflix-skip-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .netflix-skip-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .netflix-skip-btn span {
+    font-size: 0.55rem;
+  }
+
+  .netflix-progress-container {
+    height: 4px;
+    margin: 0.5rem 0;
+  }
+
+  .netflix-time-display {
+    font-size: 0.75rem;
+  }
+
+  .speed-control-button,
+  .audio-track-selector {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+    min-width: 40px;
+  }
+
+  .netflix-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .netflix-logo {
+    font-size: 1.2rem;
+  }
+
+  .hero-banner {
+    height: 50vh;
+    min-height: 300px;
+  }
+
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .hero-description {
+    font-size: 0.9rem;
+    max-width: 90%;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .hero-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+  }
+
+  .movie-section {
+    margin: 1.5rem 0;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .movies-row {
+    gap: 0.5rem;
+  }
+
+  .movie-card-netflix {
+    min-width: 100px;
+  }
+
+  .movie-poster-netflix {
+    height: 150px;
+  }
+
+  .row-container {
+    position: relative;
+  }
+
+  .scroll-button {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+  }
+}
+
+/* Additional mobile optimizations */
+@media (max-width: 360px) {
+  .netflix-header {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .netflix-logo {
+    font-size: 1rem;
+  }
+
+  .search-input {
+    width: 120px;
+    font-size: 0.8rem;
+  }
+
+  .movie-card-netflix {
+    min-width: 90px;
+  }
+
+  .movie-poster-netflix {
+    height: 135px;
+  }
+
+  .hero-title {
+    font-size: 1.5rem;
+  }
+}
