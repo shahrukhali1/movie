@@ -1751,12 +1751,16 @@ function App() {
       if (videoPath) {
         // Detect environment
         const isVercel = window.location.hostname.includes("vercel.app");
+        const isNetlify = window.location.hostname.includes("netlify.app");
 
         if (isVercel) {
           // On Vercel: use /api/video-proxy with query parameter
           // This avoids catch-all route issues
           const encodedPath = encodeURIComponent(videoPath);
           currentVideoUrl = `/api/video-proxy?path=${encodedPath}`;
+        } else if (isNetlify) {
+          // On Netlify: use /video path (Netlify redirect will proxy it)
+          currentVideoUrl = `/video${videoPath}`;
         } else {
           // On localhost/ngrok: use /video proxy (Vite proxy)
           currentVideoUrl = `/video${videoPath}`;

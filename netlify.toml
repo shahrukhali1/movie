@@ -2,7 +2,15 @@
   command = "npm run build"
   publish = "dist"
 
-# Redirect all routes to index.html for SPA routing
+# Proxy video requests to Netlify Edge Function (supports streaming)
+# The :splat captures everything after /video/
+[[redirects]]
+  from = "/video/*"
+  to = "/.netlify/edge-functions/video-proxy?path=:splat"
+  status = 200
+  force = true
+
+# Redirect all other routes to index.html for SPA routing
 [[redirects]]
   from = "/*"
   to = "/index.html"
