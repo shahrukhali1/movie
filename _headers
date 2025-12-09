@@ -1,0 +1,34 @@
+/*
+  X-Frame-Options: DENY
+  X-XSS-Protection: 1; mode=block
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/*.js
+  Content-Type: application/javascript; charset=utf-8
+
+/*.mjs
+  Content-Type: application/javascript; charset=utf-8
+
+/*.jsx
+  Content-Type: application/javascript; charset=utf-8
+
+/*.css
+  Content-Type: text/css; charset=utf-8
+
+/*.html
+  Content-Type: text/html; charset=utf-8
+
+/*.json
+  Content-Type: application/json; charset=utf-8
+
+/*.mp4
+  Content-Type: video/mp4
+  Accept-Ranges: bytes
+
+/*.webm
+  Content-Type: video/webm
+  Accept-Ranges: bytes
+
+/*.vtt
+  Content-Type: text/vtt; charset=utf-8
