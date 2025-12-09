@@ -1770,6 +1770,7 @@ function App() {
         // Detect environment
         const isVercel = window.location.hostname.includes("vercel.app");
         const isNetlify = window.location.hostname.includes("netlify.app");
+        const isGitHubPages = window.location.hostname.includes("github.io");
 
         if (isVercel) {
           // On Vercel: use /api/video-proxy with query parameter
@@ -1779,6 +1780,11 @@ function App() {
         } else if (isNetlify) {
           // On Netlify: use /video path (Netlify redirect will proxy it)
           currentVideoUrl = `/video${videoPath}`;
+        } else if (isGitHubPages) {
+          // On GitHub Pages: use direct URL (static hosting, no server-side proxy)
+          // GitHub Pages doesn't support serverless functions, so use direct URL
+          // Note: This will expose the cmlhz.com URL, but GitHub Pages is static only
+          currentVideoUrl = `https://cmlhz.com${videoPath}`;
         } else {
           // On localhost/ngrok: use /video proxy (Vite proxy)
           currentVideoUrl = `/video${videoPath}`;
