@@ -1781,11 +1781,11 @@ function App() {
           // On Netlify: use /video path (Netlify redirect will proxy it)
           currentVideoUrl = `/video${videoPath}`;
         } else if (isGitHubPages) {
-          // On GitHub Pages: use CORS proxy (static hosting, no server-side proxy)
-          // GitHub Pages doesn't support serverless functions, so use CORS proxy service
-          // Using allorigins.win as CORS proxy to hide actual API URL
+          // On GitHub Pages: use CORS proxy service (static hosting, no server-side proxy)
+          // GitHub Pages doesn't support serverless functions
+          // Using corsproxy.io for video streaming support
           const encodedUrl = encodeURIComponent(`https://cmlhz.com${videoPath}`);
-          currentVideoUrl = `https://api.allorigins.win/raw?url=${encodedUrl}`;
+          currentVideoUrl = `https://corsproxy.io/?${encodedUrl}`;
         } else {
           // On localhost/ngrok: use /video proxy (Vite proxy)
           currentVideoUrl = `/video${videoPath}`;
