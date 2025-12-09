@@ -1749,9 +1749,17 @@ function App() {
       // Convert to appropriate URL based on environment
       // Always use proxy to hide actual API URL
       if (videoPath) {
-        // Always use /video path - Vercel rewrite will handle it
-        // This ensures API URL is hidden in all environments
-        currentVideoUrl = `/video${videoPath}`;
+        // Detect environment
+        const isVercel = window.location.hostname.includes("vercel.app");
+
+        if (isVercel) {
+          // On Vercel: use /api/video directly (API route)
+          // This works because Vercel recognizes /api/* routes automatically
+          currentVideoUrl = `/api/video${videoPath}`;
+        } else {
+          // On localhost/ngrok: use /video proxy (Vite proxy)
+          currentVideoUrl = `/video${videoPath}`;
+        }
       }
     }
 
