@@ -1753,9 +1753,10 @@ function App() {
         const isVercel = window.location.hostname.includes("vercel.app");
 
         if (isVercel) {
-          // On Vercel: use /api/video directly (API route)
-          // This works because Vercel recognizes /api/* routes automatically
-          currentVideoUrl = `/api/video${videoPath}`;
+          // On Vercel: use /api/video-proxy with query parameter
+          // This avoids catch-all route issues
+          const encodedPath = encodeURIComponent(videoPath);
+          currentVideoUrl = `/api/video-proxy?path=${encodedPath}`;
         } else {
           // On localhost/ngrok: use /video proxy (Vite proxy)
           currentVideoUrl = `/video${videoPath}`;
