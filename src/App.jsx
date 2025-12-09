@@ -50,7 +50,7 @@ function App() {
     }
     return "http://localhost:5173";
   };
-  
+
   const isVercelDomain = () => {
     if (typeof window !== "undefined") {
       return window.location.hostname.includes("vercel.app");
@@ -155,13 +155,14 @@ function App() {
       try {
         const urlObj = new URL(fullUrl);
         const videoPath = urlObj.pathname;
-        
+
         // Check if we're on Vercel (production) - use API route
         // Otherwise use /video for local dev
-        const isVercel = typeof window !== "undefined" && 
-          (window.location.hostname.includes("vercel.app") || 
-           !window.location.hostname.includes("localhost"));
-        
+        const isVercel =
+          typeof window !== "undefined" &&
+          (window.location.hostname.includes("vercel.app") ||
+            !window.location.hostname.includes("localhost"));
+
         if (isVercel) {
           // Use Vercel API route: /api/video-proxy/...
           const proxyUrl = `/api/video-proxy${videoPath}`;
@@ -176,10 +177,11 @@ function App() {
         // Fallback: try to extract path manually
         const match = fullUrl.match(/cmlhz\.com(\/.*)/);
         if (match) {
-          const isVercel = typeof window !== "undefined" && 
-            (window.location.hostname.includes("vercel.app") || 
-             !window.location.hostname.includes("localhost"));
-          
+          const isVercel =
+            typeof window !== "undefined" &&
+            (window.location.hostname.includes("vercel.app") ||
+              !window.location.hostname.includes("localhost"));
+
           if (isVercel) {
             return `/api/video-proxy${match[1]}`;
           } else {
@@ -1289,20 +1291,23 @@ function App() {
       let moviePageResponse;
       const moviePageUrl = movie.url;
       // Show current domain URL instead of actual API URL
-      const origin = getCurrentOrigin();
-      const isVercelEnv = isVercelDomain();
+      const displayOriginForMoviePage = getCurrentOrigin();
+      const isVercelEnvForMoviePage = isVercelDomain();
       const displayMovieUrl = moviePageUrl.replace(
         "https://111.90.159.132",
-        isVercelEnv ? `${origin}/api` : "http://localhost:5173/api"
+        isVercelEnvForMoviePage
+          ? `${displayOriginForMoviePage}/api`
+          : "http://localhost:5173/api"
       );
       console.log("📡 Fetching Movie Page:", displayMovieUrl);
 
       // Always use proxy in dev mode to hide actual API URLs from network tab
       if (import.meta.env.DEV) {
         const proxyUrl = moviePageUrl.replace("https://111.90.159.132", "/api");
-        // Show localhost URL in console
+        // Show current domain URL in console
+        const displayOriginForProxy = getCurrentOrigin();
         const displayProxyUrl = proxyUrl.startsWith("/")
-          ? `http://localhost:5173${proxyUrl}`
+          ? `${displayOriginForProxy}${proxyUrl}`
           : proxyUrl;
         console.log("🔄 Using Proxy URL:", displayProxyUrl);
         moviePageResponse = await fetch(proxyUrl, {
@@ -1592,25 +1597,29 @@ function App() {
         videoUrl && videoUrl.includes("cmlhz.com")
           ? videoUrl.replace("https://cmlhz.com", "http://localhost:5173/video")
           : videoUrl;
-      // Show current domain URL instead of localhost
-      const currentOrigin = window.location.origin;
-      const isVercel = currentOrigin.includes("vercel.app");
+      // Show current domain URLs instead of actual API URLs
+      const displayOriginForExtraction = getCurrentOrigin();
+      const isVercelEnvForExtraction = isVercelDomain();
+      const videoProxyPathForExtraction = isVercelEnvForExtraction
+        ? "/api/video-proxy"
+        : "/video";
       const displayProxiedVideoUrl =
-        proxiedVideoUrl && (proxiedVideoUrl.startsWith("/video") || proxiedVideoUrl.startsWith("/api/video-proxy"))
-          ? `${currentOrigin}${proxiedVideoUrl}`
+        proxiedVideoUrl &&
+        (proxiedVideoUrl.startsWith("/video") ||
+          proxiedVideoUrl.startsWith("/api/video-proxy"))
+          ? `${displayOriginForExtraction}${proxiedVideoUrl}`
           : proxiedVideoUrl;
-      // Show current domain URLs
-      const origin = getCurrentOrigin();
-      const isVercelEnv = isVercelDomain();
-      const videoProxyPath = isVercelEnv ? "/api/video-proxy" : "/video";
       const displaySubtitleUrls = subtitleUrls.map((url) =>
         url && url.includes("cmlhz.com")
-          ? url.replace("https://cmlhz.com", `${origin}${videoProxyPath}`)
+          ? url.replace(
+              "https://cmlhz.com",
+              `${displayOriginForExtraction}${videoProxyPathForExtraction}`
+            )
           : url
       );
       const displayProxiedSubtitleUrls = proxiedSubtitleUrls.map((url) =>
-        url && (url.startsWith("/video") || url.startsWith("/api/video-proxy")) 
-          ? `${origin}${url}` 
+        url && (url.startsWith("/video") || url.startsWith("/api/video-proxy"))
+          ? `${displayOriginForExtraction}${url}`
           : url
       );
       console.log("🔍 Original Video URL:", displayVideoUrl);
@@ -1685,10 +1694,12 @@ function App() {
       console.log("✅ ===== MOVIE DATA SET FOR PLAYER =====");
       console.log("🎥 Final Movie Data:", finalMovieData);
       // Show current domain URL instead of actual API URL
-      const origin = getCurrentOrigin();
+      const displayOriginForPlayer = getCurrentOrigin();
       const displayProxiedVideoUrlForPlayer =
-        proxiedVideoUrl && (proxiedVideoUrl.startsWith("/video") || proxiedVideoUrl.startsWith("/api/video-proxy"))
-          ? `${origin}${proxiedVideoUrl}`
+        proxiedVideoUrl &&
+        (proxiedVideoUrl.startsWith("/video") ||
+          proxiedVideoUrl.startsWith("/api/video-proxy"))
+          ? `${displayOriginForPlayer}${proxiedVideoUrl}`
           : proxiedVideoUrl;
       console.log("🎬 Video URL for Player:", displayProxiedVideoUrlForPlayer);
       console.log("🎵 Audio Tracks:", audioTracks);
@@ -1754,7 +1765,7 @@ function App() {
     // Convert to proxy URL if needed
     const isVercelEnv = isVercelDomain();
     const videoProxyPath = isVercelEnv ? "/api/video-proxy" : "/video";
-    
+
     if (rawVideoUrl) {
       if (rawVideoUrl.includes("cmlhz.com")) {
         // Extract path from cmlhz.com URL
@@ -1766,15 +1777,21 @@ function App() {
           if (match) {
             currentVideoUrl = `${videoProxyPath}${match[1]}`;
           } else {
-            currentVideoUrl = rawVideoUrl.replace("https://cmlhz.com", videoProxyPath);
+            currentVideoUrl = rawVideoUrl.replace(
+              "https://cmlhz.com",
+              videoProxyPath
+            );
           }
         }
-      } else if (rawVideoUrl.startsWith("/video") || rawVideoUrl.startsWith("/api/video-proxy")) {
+      } else if (
+        rawVideoUrl.startsWith("/video") ||
+        rawVideoUrl.startsWith("/api/video-proxy")
+      ) {
         // Already proxied, but may need to update path for Vercel
         const basePath = rawVideoUrl.split("?")[0];
-        if (isVercel && basePath.startsWith("/video")) {
+        if (isVercelEnv && basePath.startsWith("/video")) {
           currentVideoUrl = basePath.replace("/video", "/api/video-proxy");
-        } else if (!isVercel && basePath.startsWith("/api/video-proxy")) {
+        } else if (!isVercelEnv && basePath.startsWith("/api/video-proxy")) {
           currentVideoUrl = basePath.replace("/api/video-proxy", "/video");
         } else {
           currentVideoUrl = basePath;
@@ -1790,7 +1807,11 @@ function App() {
       }
 
       // Generate signed URL with expiration (1 hour)
-      if (currentVideoUrl && (currentVideoUrl.startsWith("/video") || currentVideoUrl.startsWith("/api/video-proxy"))) {
+      if (
+        currentVideoUrl &&
+        (currentVideoUrl.startsWith("/video") ||
+          currentVideoUrl.startsWith("/api/video-proxy"))
+      ) {
         const signed = generateSignedUrl(currentVideoUrl, 3600);
         currentVideoUrl = signed.signedUrl;
       }
@@ -1800,18 +1821,24 @@ function App() {
     console.log("▶️ ===== VIDEO PLAYER SETUP =====");
     console.log("🎬 Selected Movie:", selectedMovie.name);
     // Hide actual API URLs, show localhost
+    // Show current domain URLs instead of actual API URLs
+    const displayOriginForSetup = getCurrentOrigin();
+    const isVercelEnvForSetup = isVercelDomain();
+    const videoProxyPathForSetup = isVercelEnvForSetup
+      ? "/api/video-proxy"
+      : "/video";
     const displayRawVideoUrl =
       rawVideoUrl && rawVideoUrl.includes("cmlhz.com")
         ? rawVideoUrl.replace(
             "https://cmlhz.com",
-            "http://localhost:5173/video"
+            `${displayOriginForSetup}${videoProxyPathForSetup}`
           )
         : rawVideoUrl;
-    // Show current domain URL instead of localhost
-    const currentOrigin = window.location.origin;
     const displayCurrentVideoUrl =
-      currentVideoUrl && (currentVideoUrl.startsWith("/video") || currentVideoUrl.startsWith("/api/video-proxy"))
-        ? `${currentOrigin}${currentVideoUrl}`
+      currentVideoUrl &&
+      (currentVideoUrl.startsWith("/video") ||
+        currentVideoUrl.startsWith("/api/video-proxy"))
+        ? `${displayOriginForSetup}${currentVideoUrl}`
         : currentVideoUrl;
     console.log("🔗 Raw Video URL:", displayRawVideoUrl);
     console.log("🔄 Current Video URL (for player):", displayCurrentVideoUrl);
