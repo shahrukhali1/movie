@@ -229,11 +229,11 @@ function App() {
       }
 
       // Console log API URL (show current domain instead of actual API)
-      const origin = getCurrentOrigin();
+      const displayOriginForApi = getCurrentOrigin();
       const isVercelEnv = isVercelDomain();
       const displayUrl = apiUrl.replace(
         "https://111.90.159.132",
-        isVercelEnv ? `${origin}/api` : "http://localhost:5173/api"
+        isVercelEnv ? `${displayOriginForApi}/api` : "http://localhost:5173/api"
       );
       console.log("🎬 ===== MOVIE DATA API CALL =====");
       console.log("📡 API URL:", displayUrl);
@@ -1742,12 +1742,13 @@ function App() {
     // Check environment
     const isVercelEnv = isVercelDomain();
     const videoProxyPath = isVercelEnv ? "/api/video-proxy" : "/video";
-    
+
     console.log("🎬 Video URL Conversion:", {
       rawVideoUrl,
       isVercel: isVercelEnv,
       videoProxyPath,
-      hostname: typeof window !== "undefined" ? window.location.hostname : "unknown"
+      hostname:
+        typeof window !== "undefined" ? window.location.hostname : "unknown",
     });
 
     // Extract base URL if it's already signed (remove token and expires)
@@ -1782,7 +1783,12 @@ function App() {
         if (isVercelEnv && basePath.startsWith("/video")) {
           // Convert /video to /api/video-proxy on Vercel
           currentVideoUrl = basePath.replace("/video", "/api/video-proxy");
-          console.log("🔄 Converting /video to /api/video-proxy:", basePath, "->", currentVideoUrl);
+          console.log(
+            "🔄 Converting /video to /api/video-proxy:",
+            basePath,
+            "->",
+            currentVideoUrl
+          );
         } else if (!isVercelEnv && basePath.startsWith("/api/video-proxy")) {
           currentVideoUrl = basePath.replace("/api/video-proxy", "/video");
         } else {
@@ -1965,7 +1971,9 @@ function App() {
                       ? selectedMovie.subtitleUrls.map((subtitleUrl, index) => {
                           // Convert subtitle URL to proxy if needed
                           const isVercelEnv = isVercelDomain();
-                          const videoProxyPath = isVercelEnv ? "/api/video-proxy" : "/video";
+                          const videoProxyPath = isVercelEnv
+                            ? "/api/video-proxy"
+                            : "/video";
                           const proxySubtitleUrl =
                             subtitleUrl && subtitleUrl.includes("cmlhz.com")
                               ? subtitleUrl.replace(
