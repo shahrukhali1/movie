@@ -12,7 +12,21 @@ const ALLOWED_DOMAINS = [
   ".ngrok-free.app", // Allow all ngrok subdomains
   ".vercel.app", // Allow all Vercel subdomains
   "movie-desxyuglr-shahrukhali1s-projects.vercel.app",
+  "movie-nine-jet.vercel.app",
+  "vercel.app", // Base Vercel domain
 ];
+
+// Helper to check if domain matches Vercel pattern
+const isVercelDomain = (hostname) => {
+  return hostname.includes("vercel.app") || hostname.endsWith(".vercel.app");
+};
+
+// Helper to check if domain matches ngrok pattern
+const isNgrokDomain = (hostname) => {
+  return (
+    hostname.includes("ngrok-free.app") || hostname.endsWith(".ngrok-free.app")
+  );
+};
 
 // Generate JWT token
 export const generateToken = (payload, expiresIn = "1h") => {
@@ -79,31 +93,87 @@ export const generateSignedUrl = (url, expiresIn = 3600) => {
 
 // Check if domain is allowed
 export const isDomainAllowed = (origin) => {
-  if (!origin) return false;
+  if (!origin) {
+    // If no origin provided, check window.location (for client-side)
+    if (typeof window !== "undefined") {
+      origin = window.location.origin;
+    } else {
+      return false;
+    }
+  }
 
   try {
     const url = new URL(origin);
     const hostname = url.hostname;
 
-    return ALLOWED_DOMAINS.some((domain) => {
+    // Quick checks for common patterns
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return true;
+    }
+
+    if (isVercelDomain(hostname)) {
+      return true;
+    }
+
+    if (isNgrokDomain(hostname)) {
+      return true;
+    }
+
+    // Check against allowed domains list
+    const isAllowed = ALLOWED_DOMAINS.some((domain) => {
       if (domain.startsWith(".")) {
         // Wildcard domain (e.g., .vercel.app, .ngrok-free.app)
+        // Check if hostname ends with the domain (e.g., example.vercel.app ends with .vercel.app)
         return hostname.endsWith(domain) || hostname === domain.slice(1);
       }
       // Exact match or contains
       return hostname === domain || hostname.includes(domain);
     });
+
+    // Debug logging
+    if (!isAllowed && typeof window !== "undefined") {
+      console.log("Domain check:", {
+        origin,
+        hostname,
+        isVercel: isVercelDomain(hostname),
+        isNgrok: isNgrokDomain(hostname),
+        allowedDomains: ALLOWED_DOMAINS,
+      });
+    }
+
+    return isAllowed;
   } catch (e) {
+    // If URL parsing fails, try direct string matching as fallback
+    if (
+      origin.includes("vercel.app") ||
+      origin.includes("localhost") ||
+      origin.includes("ngrok-free.app")
+    ) {
+      return true;
+    }
     return false;
   }
 };
 
 // Get current domain token
 export const getDomainToken = () => {
+  if (typeof window === "undefined") return null;
+
   const origin = window.location.origin;
   if (isDomainAllowed(origin)) {
     return generateToken({ domain: origin, type: "domain" }, "24h");
   }
+
+  // Fallback: if domain check fails but it's a known domain, still generate token
+  if (
+    origin.includes("vercel.app") ||
+    origin.includes("localhost") ||
+    origin.includes("ngrok-free.app")
+  ) {
+    console.warn("Domain not in whitelist but allowing:", origin);
+    return generateToken({ domain: origin, type: "domain" }, "24h");
+  }
+
   return null;
 };
 

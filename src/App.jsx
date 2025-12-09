@@ -161,9 +161,13 @@ function App() {
     searchQueryParam = null
   ) => {
     try {
-      // Domain validation
-      if (!isDomainAllowed(window.location.origin)) {
-        setError("Access denied: Domain not allowed");
+      // Domain validation - use window.location.origin
+      const currentOrigin = window.location.origin;
+      const isAllowed = isDomainAllowed(currentOrigin);
+
+      if (!isAllowed) {
+        console.error("Domain not allowed:", currentOrigin);
+        setError(`Access denied: Domain not allowed (${currentOrigin})`);
         setLoading(false);
         return;
       }
@@ -174,6 +178,7 @@ function App() {
       // Get domain token for authentication
       const domainToken = getDomainToken();
       if (!domainToken) {
+        console.error("Failed to generate domain token for:", currentOrigin);
         setError("Access denied: Unable to generate token");
         setLoading(false);
         return;
