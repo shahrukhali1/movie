@@ -1679,42 +1679,55 @@ function App() {
     let rawVideoUrl = selectedAudioTrack?.videoUrl || selectedMovie.videoUrl;
     let currentVideoUrl = rawVideoUrl;
 
-    // Always use /video proxy - works on localhost, ngrok, and Vercel (if proxy is configured)
+    // Detect environment: localhost/ngrok = dev, Vercel = production
+    const isLocalDev =
+      import.meta.env.DEV ||
+      window.location.hostname === "localhost" ||
+      window.location.hostname.includes("ngrok") ||
+      window.location.hostname === "127.0.0.1";
+
+    const isVercel = window.location.hostname.includes("vercel.app");
+
     if (rawVideoUrl) {
+      // Extract video path from various URL formats
+      let videoPath = null;
+
       // If URL contains video-proxy, extract the actual path
       if (rawVideoUrl.includes("/api/video-proxy")) {
         const videoPathMatch = rawVideoUrl.match(
           /\/api\/video-proxy(\/.+?)(?:\?|$)/
         );
         if (videoPathMatch) {
-          currentVideoUrl = `/video${videoPathMatch[1]}`;
+          videoPath = videoPathMatch[1];
         }
       }
       // If URL contains vercel.app, extract path
       else if (rawVideoUrl.includes("vercel.app")) {
         const vercelMatch = rawVideoUrl.match(/\/movies-xxx\/.+\.mp4/);
         if (vercelMatch) {
-          currentVideoUrl = `/video${vercelMatch[0]}`;
+          videoPath = vercelMatch[0];
         }
       }
-      // If URL starts with /video, keep it as is
+      // If URL starts with /video, extract the path
       else if (rawVideoUrl.startsWith("/video")) {
-        currentVideoUrl = rawVideoUrl;
+        videoPath = rawVideoUrl.replace("/video", "");
       }
-      // If URL contains cmlhz.com, convert to /video proxy
+      // If URL contains cmlhz.com, extract path
       else if (rawVideoUrl.includes("cmlhz.com")) {
-        currentVideoUrl = rawVideoUrl.replace("https://cmlhz.com", "/video");
+        const urlMatch = rawVideoUrl.match(/cmlhz\.com(\/.+?)(?:\?|$)/);
+        if (urlMatch) {
+          videoPath = urlMatch[1];
+        }
       }
-      // If URL contains movies-xxx path, add /video prefix
+      // If URL contains movies-xxx path, extract it
       else if (rawVideoUrl.includes("movies-xxx")) {
         const pathMatch = rawVideoUrl.match(/\/movies-xxx\/.+\.mp4/);
         if (pathMatch) {
-          currentVideoUrl = `/video${pathMatch[0]}`;
+          videoPath = pathMatch[0];
         } else {
-          const fullPath = rawVideoUrl.startsWith("/")
+          videoPath = rawVideoUrl.startsWith("/")
             ? rawVideoUrl
             : `/${rawVideoUrl}`;
-          currentVideoUrl = `/video${fullPath}`;
         }
       }
       // Relative URL without http or /
@@ -1722,11 +1735,24 @@ function App() {
         !rawVideoUrl.startsWith("http") &&
         !rawVideoUrl.startsWith("/")
       ) {
-        currentVideoUrl = `/video/${rawVideoUrl}`;
+        videoPath = `/${rawVideoUrl}`;
       }
       // If it's already a full http URL and not cmlhz.com, keep it
-      else if (rawVideoUrl.startsWith("http")) {
+      else if (
+        rawVideoUrl.startsWith("http") &&
+        !rawVideoUrl.includes("cmlhz.com")
+      ) {
         currentVideoUrl = rawVideoUrl;
+        videoPath = null; // Don't process further
+      }
+
+      // Convert to appropriate URL based on environment
+      // Always use /video proxy to hide actual API URL (works on both local and Vercel)
+      if (videoPath) {
+        // Always use /video proxy - hides actual API URL
+        // On localhost: Vite proxy handles it
+        // On Vercel: API route will handle it (see api/video/[...path].js)
+        currentVideoUrl = `/video${videoPath}`;
       }
     }
 
