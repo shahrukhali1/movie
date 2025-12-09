@@ -84,7 +84,14 @@ exports.handler = async (event, context) => {
 
     // Get response body as array buffer
     const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    // Convert to base64 for Netlify Functions
+    // Use Uint8Array and manual base64 encoding since Buffer might not be available
+    const uint8Array = new Uint8Array(arrayBuffer);
+    let binaryString = "";
+    for (let i = 0; i < uint8Array.length; i++) {
+      binaryString += String.fromCharCode(uint8Array[i]);
+    }
+    const base64String = btoa(binaryString);
 
     // Forward response headers
     const headers = {
@@ -108,11 +115,11 @@ exports.handler = async (event, context) => {
     }
 
     // Return response with base64 encoded body for Netlify Functions
-    // Note: For very large files, consider using streaming or Edge Functions
+    // Note: For very large files (>6MB), consider using Edge Functions or direct URL
     return {
       statusCode: response.status,
       headers,
-      body: buffer.toString("base64"),
+      body: base64String,
       isBase64Encoded: true,
     };
   } catch (error) {
@@ -126,6 +133,7 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({
         error: "Failed to proxy video",
         message: error.message,
+        stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
       }),
     };
   }
