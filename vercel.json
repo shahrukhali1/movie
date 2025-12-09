@@ -4,5 +4,10 @@
       "source": "/video/:path*",
       "destination": "/api/video/:path*"
     }
-  ]
+  ],
+  "functions": {
+    "api/video/[...path].js": {
+      "maxDuration": 300
+    }
+  }
 }
