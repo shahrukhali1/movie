@@ -1,16 +1,58 @@
-# React + Vite
+# Movies App - Netflix Clone
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based Netflix clone that fetches and displays movies from external APIs.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🎬 Movie listings with categories
+- 🎥 Video playback with custom Netflix-style player
+- 🔍 Search functionality
+- 📱 Responsive design
+- 🎨 Modern UI/UX
 
-## React Compiler
+## Deployment
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### GitHub Pages
 
-## Expanding the ESLint configuration
+1. **Enable GitHub Pages:**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+   - Go to your repository on GitHub
+   - Click **Settings** → **Pages**
+   - Under **Source**, select **GitHub Actions**
+   - Save the settings
+
+2. **Push code to trigger deployment:**
+
+   ```bash
+   git add .
+   git commit -m "Setup GitHub Pages"
+   git push origin main
+   ```
+
+3. **Check deployment:**
+   - Go to **Actions** tab in your repository
+   - Wait for the workflow to complete
+   - Your site will be available at: `https://shahrukhali1.github.io/movie/`
+
+### Manual Deploy (Alternative)
+
+```bash
+npm run deploy
+```
+
+## Development
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+```
+
+## Environment Variables
+
+Optional: Set `VITE_OPENAI_API_KEY` for image generation fallbacks.
