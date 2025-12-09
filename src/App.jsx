@@ -123,14 +123,21 @@ function App() {
   const getProxiedVideoUrl = (url) => {
     if (!url) return url;
 
-    // If URL contains video-proxy or vercel, convert to /video proxy
-    if (url.includes("/api/video-proxy") || url.includes("vercel.app")) {
-      // Extract the actual video path from video-proxy URL
-      const videoPathMatch = url.match(/\/api\/video-proxy(\/.+?)(?:\?|$)/);
-      if (videoPathMatch) {
-        return `/video${videoPathMatch[1]}`;
+    // Detect environment
+    const isVercel = window.location.hostname.includes("vercel.app");
+    const isNetlify = window.location.hostname.includes("netlify.app");
+
+    // If URL contains video-proxy, extract path but don't convert (will be handled later)
+    if (url.includes("/api/video-proxy")) {
+      const pathMatch = url.match(/[?&]path=([^&]+)/);
+      if (pathMatch) {
+        const decodedPath = decodeURIComponent(pathMatch[1]);
+        return decodedPath.startsWith("/") ? decodedPath : `/${decodedPath}`;
       }
-      // Fallback: try to extract from vercel URL
+    }
+
+    // If URL contains vercel.app, extract path
+    if (url.includes("vercel.app")) {
       const vercelMatch = url.match(/\/movies-xxx\/.+\.mp4/);
       if (vercelMatch) {
         return `/video${vercelMatch[0]}`;
@@ -1692,13 +1699,24 @@ function App() {
       // Extract video path from various URL formats
       let videoPath = null;
 
-      // If URL contains video-proxy, extract the actual path
+      // If URL contains video-proxy, extract the actual path from query parameter
       if (rawVideoUrl.includes("/api/video-proxy")) {
-        const videoPathMatch = rawVideoUrl.match(
-          /\/api\/video-proxy(\/.+?)(?:\?|$)/
-        );
-        if (videoPathMatch) {
-          videoPath = videoPathMatch[1];
+        // First try to get path from query parameter
+        const queryMatch = rawVideoUrl.match(/[?&]path=([^&]+)/);
+        if (queryMatch) {
+          videoPath = decodeURIComponent(queryMatch[1]);
+          // Ensure path starts with /
+          if (!videoPath.startsWith("/")) {
+            videoPath = `/${videoPath}`;
+          }
+        } else {
+          // Fallback: try to extract from path
+          const videoPathMatch = rawVideoUrl.match(
+            /\/api\/video-proxy(\/.+?)(?:\?|$)/
+          );
+          if (videoPathMatch) {
+            videoPath = videoPathMatch[1];
+          }
         }
       }
       // If URL contains vercel.app, extract path
