@@ -1781,11 +1781,13 @@ function App() {
           // On Netlify: use /video path (Netlify redirect will proxy it)
           currentVideoUrl = `/video${videoPath}`;
         } else if (isGitHubPages) {
-          // On GitHub Pages: use direct URL (static hosting, no server-side proxy)
-          // GitHub Pages doesn't support serverless functions
-          // Direct URL will work if CORS allows, otherwise videos won't play
-          // This is a limitation of static hosting platforms
-          currentVideoUrl = `https://cmlhz.com${videoPath}`;
+          // On GitHub Pages: use CORS proxy with Referer header
+          // GitHub Pages is static hosting, can't proxy like Vite
+          // cmlhz.com requires Referer header, so we use a proxy that adds it
+          // Using cors-anywhere or similar service that supports video streaming
+          const encodedUrl = encodeURIComponent(`https://cmlhz.com${videoPath}`);
+          // Use a CORS proxy that supports video streaming and adds Referer
+          currentVideoUrl = `https://api.allorigins.win/raw?url=${encodedUrl}`;
         } else {
           // On localhost/ngrok: use /video proxy (Vite proxy)
           currentVideoUrl = `/video${videoPath}`;
