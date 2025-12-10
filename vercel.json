@@ -17,9 +17,6 @@
     },
     "api/video-proxy.js": {
       "maxDuration": 300
-    },
-    "api/video/[...path].js": {
-      "maxDuration": 300
     }
   }
 }
