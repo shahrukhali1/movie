@@ -123,60 +123,44 @@ function App() {
   const getProxiedVideoUrl = (url) => {
     if (!url) return url;
 
-    // Detect environment
-    const isVercel = window.location.hostname.includes("vercel.app");
-    const isNetlify = window.location.hostname.includes("netlify.app");
+    // Extract the actual video path from any URL format
+    let videoPath = null;
 
-    // If URL contains video-proxy, extract path but don't convert (will be handled later)
+    // If URL contains video-proxy, extract path from query
     if (url.includes("/api/video-proxy")) {
       const pathMatch = url.match(/[?&]path=([^&]+)/);
       if (pathMatch) {
-        const decodedPath = decodeURIComponent(pathMatch[1]);
-        return decodedPath.startsWith("/") ? decodedPath : `/${decodedPath}`;
-      }
-    }
-
-    // If URL contains vercel.app, extract path
-    if (url.includes("vercel.app")) {
-      const vercelMatch = url.match(/\/movies-xxx\/.+\.mp4/);
-      if (vercelMatch) {
-        return `/video${vercelMatch[0]}`;
-      }
-    }
-
-    // Handle both absolute and relative URLs
-    let fullUrl = url;
-    if (!url.startsWith("http") && !url.startsWith("/")) {
-      // Relative URL, make it absolute
-      fullUrl = `https://cmlhz.com${url.startsWith("/") ? url : `/${url}`}`;
-    }
-
-    // If URL is from cmlhz.com, convert it to use local proxy
-    if (fullUrl.includes("cmlhz.com/movies-xxx")) {
-      try {
-        const urlObj = new URL(fullUrl);
-        const proxyUrl = `/video${urlObj.pathname}${urlObj.search}`;
-        return proxyUrl;
-      } catch (e) {
-        // Fallback: try to extract path manually
-        const match = fullUrl.match(/cmlhz\.com(\/.*)/);
-        if (match) {
-          const proxyUrl = `/video${match[1]}`;
-          return proxyUrl;
+        videoPath = decodeURIComponent(pathMatch[1]);
+        if (!videoPath.startsWith("/")) {
+          videoPath = `/${videoPath}`;
         }
-        return url; // Return original if can't convert
+      }
+    }
+    // If URL contains cmlhz.com, extract path
+    else if (url.includes("cmlhz.com")) {
+      const match = url.match(/cmlhz\.com(\/.+?)(?:\?|$)/);
+      if (match) {
+        videoPath = match[1];
+      }
+    }
+    // If URL starts with /video, extract path
+    else if (url.startsWith("/video")) {
+      videoPath = url.replace("/video", "");
+    }
+    // If URL contains movies-xxx path, extract it
+    else if (url.includes("movies-xxx")) {
+      const match = url.match(/\/movies-xxx\/.+\.mp4/);
+      if (match) {
+        videoPath = match[0];
       }
     }
 
-    // If URL contains movies-xxx path but no domain, assume it needs /video prefix
-    if (
-      url.includes("movies-xxx") &&
-      !url.startsWith("/video") &&
-      !url.startsWith("http")
-    ) {
-      return `/video${url.startsWith("/") ? url : `/${url}`}`;
+    // If we extracted a path, return it (will be converted to environment-specific URL later)
+    if (videoPath) {
+      return videoPath;
     }
 
+    // Fallback: return original URL
     return url;
   };
 
@@ -1785,7 +1769,9 @@ function App() {
           // GitHub Pages is static hosting, can't proxy like Vite
           // cmlhz.com requires Referer header, so we use a proxy that adds it
           // Using cors-anywhere or similar service that supports video streaming
-          const encodedUrl = encodeURIComponent(`https://cmlhz.com${videoPath}`);
+          const encodedUrl = encodeURIComponent(
+            `https://cmlhz.com${videoPath}`
+          );
           // Use a CORS proxy that supports video streaming and adds Referer
           currentVideoUrl = `https://api.allorigins.win/raw?url=${encodedUrl}`;
         } else {
