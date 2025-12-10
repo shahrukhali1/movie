@@ -1751,12 +1751,20 @@ function App() {
       // Convert to appropriate URL based on environment
       // Always use proxy to hide actual API URL
       if (videoPath) {
-        // Detect environment
-        const isVercel = window.location.hostname.includes("vercel.app");
-        const isNetlify = window.location.hostname.includes("netlify.app");
-        const isGitHubPages = window.location.hostname.includes("github.io");
+        // Detect environment - check localhost first
+        const isLocalhost = 
+          window.location.hostname === "localhost" ||
+          window.location.hostname === "127.0.0.1" ||
+          window.location.hostname.includes("ngrok") ||
+          import.meta.env.DEV;
+        const isVercel = !isLocalhost && window.location.hostname.includes("vercel.app");
+        const isNetlify = !isLocalhost && window.location.hostname.includes("netlify.app");
+        const isGitHubPages = !isLocalhost && window.location.hostname.includes("github.io");
 
-        if (isVercel) {
+        if (isLocalhost) {
+          // On localhost/ngrok: use /video proxy (Vite proxy)
+          currentVideoUrl = `/video${videoPath}`;
+        } else if (isVercel) {
           // On Vercel: use /api/video-proxy with query parameter
           // This avoids catch-all route issues
           const encodedPath = encodeURIComponent(videoPath);
@@ -1768,14 +1776,13 @@ function App() {
           // On GitHub Pages: use CORS proxy with Referer header
           // GitHub Pages is static hosting, can't proxy like Vite
           // cmlhz.com requires Referer header, so we use a proxy that adds it
-          // Using cors-anywhere or similar service that supports video streaming
           const encodedUrl = encodeURIComponent(
             `https://cmlhz.com${videoPath}`
           );
           // Use a CORS proxy that supports video streaming and adds Referer
           currentVideoUrl = `https://api.allorigins.win/raw?url=${encodedUrl}`;
         } else {
-          // On localhost/ngrok: use /video proxy (Vite proxy)
+          // Default: use /video proxy (assumes Vite proxy or similar)
           currentVideoUrl = `/video${videoPath}`;
         }
       }
